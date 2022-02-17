@@ -1008,7 +1008,7 @@ However, I will try to modify the V_8 antagonistic item, and perhaps also V_3. T
 
 # To be continued
 
-```{r}
+```{r echo=FALSE}
 print("Further code comes here")
 ```
 
