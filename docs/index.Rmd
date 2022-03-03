@@ -687,7 +687,7 @@ In contrast, in the default survey disagreement seems to be more common overall.
 
 Also, the role of "balanced" respondents is drastically different. In the default survey they are as large as those who are more likely to encounter disagreement. In the alternative version, on the other hand, they are virtually non-existent. 
 
-## Affective polarization and the two FBIs?
+## Affective polarization and the two FBIs? [UPDATE!]
 
 Now, I wonder if there are differences between these two FBIs in how they are connected with affective polarization. Lets just check this first before taking any strong conclusions on which one of these metrics is "better" for our purposes.
 
@@ -803,7 +803,11 @@ OK, interesting. Looks like the relationship is negative, which would go against
 
 Although the relationship is significant at 0.05 level only with the Pearsons correlation and not with Kendall Tau's.
 
-[UPDATE!]: Arto also suggested that to see what happens if we remove the two most extreme cases on the top left corner, where the two data points have very high API score and a high negative FBI score:
+---
+
+**UPDATE STARTS**
+
+Arto also suggested that to see what happens if we remove the two most extreme cases on the top left corner, where the two data points have very high API score and a high negative FBI score:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -821,6 +825,10 @@ cor.test(TEMP$API, TEMP$FBI, method = "kendall")
 ```
 
 Sure enough, that has a significant impact and reduces Pearsons correlation by 56 % and Kendall Tau by 58 %. Unsurprisingly neither of them are statistically significant anymore.
+
+**UPDATE ENDS**
+
+---
 
 
 Lets see if the situation is similar in the alternative survey
