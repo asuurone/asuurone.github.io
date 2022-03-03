@@ -7,7 +7,7 @@ output:
     lightbox: True
     thumbnails: True
     gallery: True
-    toc_depth: 3
+    toc_depth: 4
 ---
 
 ```{r include=FALSE}
@@ -23,6 +23,7 @@ library(stats)
 library(psych) # For conducting factor analysis
 library(gridExtra)
 library(rmdformats) # for nice themes
+library(dplyr)
 
 #Loading the dataframes
 DF1 <- read.csv("~/WORK/Bubble survey eOpinion Panel/FB 250 Pilot Data/Wave 2 default survey.csv", sep=";", comment.char="#")
@@ -49,17 +50,14 @@ for(i in 1:ncol(DF2)){
 
 ```
 
-Ok, lets take a closer look at the two pilot surveys we sent shall we?
+Ok, lets take a closer look at the two pilot surveys we sent shall we? 
 
 In case you need an reminder, you can get the surveys in a word version via these links I have put on Google drive (you probably need to download them since Google docs does not seem to be able to preview them)
 
--   [Default Survey](https://docs.google.com/document/d/1yEQd7uvGu9cta69xfIh2zo5OEHZkBo0F/edit?usp=sharing&ouid=115594560134005060036&rtpof=true&sd=true)
-
-    -   The default survey had 70 respondents
-
--   [Alternative Survey](https://docs.google.com/document/d/1whCGuNBsbSHtQ_x0RDG1t1HMJqQPoJ0d/edit?usp=sharing&ouid=115594560134005060036&rtpof=true&sd=true)
-
-    -   The alternative survey had 83 respondents.
+* [Default Survey](https://docs.google.com/document/d/1yEQd7uvGu9cta69xfIh2zo5OEHZkBo0F/edit?usp=sharing&ouid=115594560134005060036&rtpof=true&sd=true)
+  - The default survey had 70 respondents
+* [Alternative Survey](https://docs.google.com/document/d/1whCGuNBsbSHtQ_x0RDG1t1HMJqQPoJ0d/edit?usp=sharing&ouid=115594560134005060036&rtpof=true&sd=true) 
+  - The alternative survey had 83 respondents.
 
 Lets first just compare these two versions in terms how long it took the respondents to fill them out:
 
@@ -74,9 +72,10 @@ paste("ALTERNATIVE SURVEY: median completion time in min:", round(median(as.inte
 
 Looks like there is not a huge difference in the median completion times. In both cases, the most common completion time was about 14 min. The mean completion times are out of wack, since some respondents probably left the session open and did not return to it or stopped filling out the survey, and returned to it much later (like 13 hours after).
 
+
 ## Feedback
 
-Lets now take a look at the feedback and see whether differences exist between the surveys.
+Lets now take a look at the feedback and see whether differences exist between the surveys. 
 
 First, here is the overall distribution to our Feedback questions:
 
@@ -112,7 +111,7 @@ plot(likert_Qs, ordered=FALSE)
 
 ```
 
-Next, here are the same questions divided by the survey versions. In addition, I added Chi square tests to see if the observed differences were statistically significant.
+Next, here are the same questions divided by the survey versions. In addition, I added Chi square tests to see if the observed differences were statistically significant. 
 
 ```{r echo=FALSE, fig.height=7, fig.width=9, warning=F}
 
@@ -129,11 +128,12 @@ plot(likert_Qs_G, ordered=FALSE)
 
 While the p-values do not indicate significant differences, it looks like the default survey is consistently the preferred version:
 
--   Respondents who took the Default version were 1.3 times more likely to say that it did not take too long
--   Default survey respondents also did not feel as much that the questions were too complex
--   They also had easier time to recall situations that the survey asked about
+* Respondents who took the Default version were 1.3 times more likely to say that it did not take too long
+* Default survey respondents also did not feel as much that the questions were too complex
+* They also had easier time to recall situations that the survey asked about
 
 So, while the differences are not huge and not statistically significant, the consistency of the results do make me prefer the Default version.
+
 
 ## Default survey: constructing a Filter Bubble Index (FBI)
 
@@ -143,11 +143,11 @@ Next up, lets look how the following questions look in the Default survey versio
 
 **Disagreement:**
 
-> When I encounter content about politics or other societal issues in my day-to-day life, I find myself disagreeing with it.
+>When I encounter content about politics or other societal issues in my day-to-day life, I find myself disagreeing with it.
 
 **Agreement:**
 
-> When I encounter content about politics or other societal issues in my day-to-day life, I find myself agreeing with it.
+>When I encounter content about politics or other societal issues in my day-to-day life, I find myself agreeing with it.
 
 First, I am just going to look at the basic distribution:
 
@@ -179,17 +179,14 @@ In essence, this is me trying to do a sort of a "Filter Bubble" index, where peo
 
 My first idea was to use a ratio for this, where the index would simply be:
 
--   commonality of encountering agreeable content = AC
-
-    -   Re-code Extremely uncommon, Extremely common to integers with a range of [1,5]
-
--   commonality of encountering disagreeable content = AD
-
-    -   Re-code Extremely uncommon, Extremely common to integers with a range of [1,5]
-
--   Filter Bubble Index (FBI) = AC/AD
+* commonality of encountering agreeable content = AC
+  + Re-code Extremely uncommon, Extremely common to integers with a range of [1,5]
+* commonality of encountering disagreeable content = AD
+  + Re-code Extremely uncommon, Extremely common to integers with a range of [1,5]
+* Filter Bubble Index (FBI) = AC/AD
 
 Lets take a look what it would look like in the case of our sample:
+
 
 ```{r echo=FALSE}
 
@@ -219,33 +216,30 @@ ggplot(TEMP, aes(x=FBI))+
 
 In this case, we can see the following:
 
--   38 respondents (54%) have perfect balance, and encounter agreeable and disagreeable content the same amount
--   10 respondents (14%) are more likely to encounter agreeable content, so they are the ones we would consider to be in a filter bubble where the respondent who scored 2.5 is in the most thigh night bubble.
--   22 respondents (31%) are more likely to encounter disagreeable content, so these are the ones who have "broken" the filter bubble.
+* 38 respondents (54%) have perfect balance, and encounter agreeable and disagreeable content the same amount
+* 10 respondents (14%) are more likely to encounter agreeable content, so they are the ones we would consider to be in a filter bubble where the respondent who scored 2.5 is in the most thigh night bubble. 
+* 22 respondents (31%) are more likely to encounter disagreeable content, so these are the ones who have "broken" the filter bubble.
 
-While the ratio-method works at least somewhat, it is a bit annoying that the ratio scale introduces problems with scale. Once you go FBI \< 0, then the distributions become much more tight night, which might be cumbersome to handle in possible regressions.
+While the ratio-method works at least somewhat, it is a bit annoying that the ratio scale introduces problems with scale. Once you go FBI < 0, then the distributions become much more tight night, which might be cumbersome to handle in possible regressions.
 
 Of course we could just re-scale the FBI, but I think its just easier to work out a alternative way that does not use the ratio.
 
 I think my preferred method is just to use negative and positive numbers and sum them up to get a similar index, but which does not have this scaling problem:
 
--   commonality of encountering agreeable content = AC
+* commonality of encountering agreeable content = AC
+  + Re-code Extremely uncommon, Extremely common to integers with a range of [1,5]
+* commonality of encountering disagreeable content = AD
+  + Re-code Extremely uncommon, Extremely common to integers with a range of [-1, -5]
+* Filter Bubble Index (FBI) = AD + AC
 
-    -   Re-code Extremely uncommon, Extremely common to integers with a range of [1,5]
+So, encountering disagreeable content receives negative numbers in according to how commonly they are encountered, and then we will just sum AC and AD together, where_
 
--   commonality of encountering disagreeable content = AD
-
-    -   Re-code Extremely uncommon, Extremely common to integers with a range of [-1, -5]
-
--   Filter Bubble Index (FBI) = AD + AC
-
-So, encountering disagreeable content receives negative numbers in according to how commonly they are encountered, and then we will just sum AC and AD together, where\_
-
--   FBI = 0 = "Perfect balance"
--   FBI > 0 = "More likely to encounter agreeable content, is in a filter bubble"
--   FBI \< 0 = "More likely to encounter disagreeable content, is not in a filter bubble"
+* FBI = 0 = "Perfect balance"
+* FBI > 0 = "More likely to encounter agreeable content, is in a filter bubble"
+* FBI < 0 = "More likely to encounter disagreeable content, is not in a filter bubble"
 
 This basically returns similar distributions as the figure above, but which is more balanced on either side of the 0 value:
+
 
 ```{r echo=FALSE}
 TEMP$FBI <- as.numeric(TEMP[,1])*-1 + as.numeric(TEMP[,2])
@@ -280,11 +274,11 @@ However, as you might recall, our theoretical framework also included encounteri
 
 **Agreement:**
 
-> When I encounter people discussing politics or other societal issues with each other, I find myself agreeing with the opinions that are being shared.
+>When I encounter people discussing politics or other societal issues with each other, I find myself agreeing with the opinions that are being shared.
 
 **Disagreement:**
 
-> When I encounter people discussing politics or other societal issues with each other, I find myself disagreeing with the opinions that are being shared.
+>When I encounter people discussing politics or other societal issues with each other, I find myself disagreeing with the opinions that are being shared.
 
 Lets first take a look at the basic distributions of these two questions:
 
@@ -342,9 +336,9 @@ ggplot(TEMP, aes(x=FBI))+
 
 Compared with the content question it looks like the amount of "balanced" respondents is smaller and we have more people who we would consider to be in a filter bubble scenario:
 
--   33 respondents (47%) are "balanced"
--   16 respondents (23%) are in a filter bubble
--   21 respondents (30%) have "broken" the filter bubble
+* 33 respondents (47%) are "balanced"
+* 16 respondents (23%) are in a filter bubble
+* 21 respondents (30%) have "broken" the filter bubble
 
 ### The final FBI based on the default survey
 
@@ -392,11 +386,12 @@ p_default
 
 Again, the number of people who are in the "balanced" category is reduced, but this time it is also quite clear, that it is more likely that the majority of your sample is not in a filter bubble, since they are more likely to encounter disagreeable content and opinions from people than they are to encounter agreeable versions of them:
 
--   25 respondents (36%) are "balanced"
--   20 respondents (29%) are in a filter bubble
--   25 respondents (36%) have "broken" the filter bubble
+* 25 respondents (36%) are "balanced"
+* 20 respondents (29%) are in a filter bubble
+* 25 respondents (36%) have "broken" the filter bubble
 
-In addition, the proportions of these three categories become more even as we have combined these two question versions.
+In addition, the proportions of these three categories become more even as we have combined these two question versions. 
+
 
 ## Alternative survey: constructing the second Filter Bubble Index (FBI)
 
@@ -406,11 +401,11 @@ Ok, lets compare the above with the alternative version of the survey, where we 
 
 **Disagreement**
 
-> Overall, how common is it for you to encounter content about politics or other societal issues that you find yourself disagreeing with in the following situations?
+>Overall, how common is it for you to encounter content about politics or other societal issues that you find yourself disagreeing with in the following situations?
 
 **Agreement**
 
-> Overall, how common is it for you to encounter content about politics or other societal issues that you find yourself agreeing with in the following situations?
+>Overall, how common is it for you to encounter content about politics or other societal issues that you find yourself agreeing with in the following situations?
 
 And the basic distribution of this battery of questions is:
 
@@ -439,23 +434,24 @@ names(TEMP) <- names
 names(TEMP)[10] <- "Type"
 
 likert_Qs <- likert(TEMP[1:9], grouping=TEMP$Type)
-plot(likert_Qs) + ggtitle("Encountering agreement and disagreement via various media")
+Plot_alternative <- plot(likert_Qs) + ggtitle("Encountering agreement and disagreement via various media")
 
+Plot_alternative
 
 ```
 
 Overall, it seems that Twitter is a place where people encounter content that they disagree with the most, but it is also worth noting that encountering content that a respondent agrees with is not all that uncommon either.
 
-Looking at the numbers, what gets me a bit worried is the amount of "I do not use this media at all" answers (indicated as *No use* in the plot). It seems that only newspapers and TV are mediums which are used virtually by all of the respondents.
+Looking at the numbers, what gets me a bit worried is the amount of "I do not use this media at all" answers (indicated as *No use* in the plot). It seems that only newspapers and TV are mediums which are used virtually by all of the respondents. 
 
 This might have an impact on the results in that depending what media options we have listed in this question, then different kinds of people will shows as being in a filter bubble. In the default version of the survey, this is not as big of a problem since we ask the big "overall amount" people encounter content that they agree or disagree with. Here, we need to have a good list of different media options, or we might risk missing something.
 
-but lets just see how my Filter Bubble Index (FBI) would work here. I am just going with my first idea here, and I will re-code all of the answers to a integers:
+but lets just see how my Filter Bubble Index (FBI) would work here. I am just going with my first idea here, and I will re-code all of the answers to a integers: 
 
--   encountering agreeable content: [1,5]
--   encountering disagreeable content [-1, -5]
--   "I don't use this media" is just a 0.
-
+ * encountering agreeable content: [1,5]
+ * encountering disagreeable content [-1, -5]
+ * "I don't use this media" is just a 0.
+ 
 Then I will merely sum the answers together, which results in this distribution:
 
 ```{r echo=FALSE}
@@ -520,13 +516,14 @@ This is quite a big change to the default version of the survey, where the wast 
 
 But lets look at the second part, which was about encountering OPINIONS from PEOPLE that the respondent either agrees or disagrees with:
 
+
 **Disagreement:**
 
-> Overall, how common is it for you to encounter opinions about politics or other societal issues that you find yourself disagreeing with in the following social situations?
+>Overall, how common is it for you to encounter opinions about politics or other societal issues that you find yourself disagreeing with in the following social situations?
 
 **Agreement:**
 
-> Overall, how common is it for you to encounter opinions about politics or other societal issues that you find yourself agreeing with in the following social situations?
+>Overall, how common is it for you to encounter opinions about politics or other societal issues that you find yourself agreeing with in the following social situations?
 
 ```{r echo=FALSE, fig.height=8, fig.width=10}
 
@@ -563,6 +560,7 @@ Here we can see pretty big differences. Friends in particular has a huge differe
 The situation is completely reversed in politicians, which is not all that suprising.
 
 But lets see how the FBI would look like in this case:
+
 
 ```{r echo=FALSE, warning=FALSE}
 
@@ -625,6 +623,7 @@ Looks like things now lean more clearly towards people encountering opinions tha
 
 But what happens when we combine these two questions together and how does it compare to the default survey?
 
+
 ```{r fig.height=5, fig.width=12, echo=FALSE}
 
 TEMP <- DF2[,c("ORIE_Q1_1", "ORIE_Q1_2", "ORIE_Q1_3", "ORIE_Q1_4", "ORIE_Q1_5", "ORIE_Q1_6", "ORIE_Q1_7", "ORIE_Q1_8", "ORIE_Q1_9", "ORIE_Q2_1", "ORIE_Q2_2", "ORIE_Q2_3", "ORIE_Q2_4", "ORIE_Q2_5", "ORIE_Q2_6", "II_Q1_1", "II_Q1_2", "II_Q1_3", "II_Q1_4", "II_Q1_5", "II_Q1_6", "II_Q1_7", "II_Q1_8", "II_Q1_9", "II_Q2_1", "II_Q2_2", "II_Q2_3", "II_Q2_4", "II_Q2_5", "II_Q2_6")]
@@ -686,7 +685,7 @@ Right, the net-result seems to be that agreement is overall more common for most
 
 In contrast, in the default survey disagreement seems to be more common overall.
 
-Also, the role of "balanced" respondents is drastically different. In the default survey they are as large as those who are more likely to encounter disagreement. In the alternative version, on the other hand, they are virtually non-existent.
+Also, the role of "balanced" respondents is drastically different. In the default survey they are as large as those who are more likely to encounter disagreement. In the alternative version, on the other hand, they are virtually non-existent. 
 
 ## Affective polarization and the two FBIs?
 
@@ -750,6 +749,7 @@ Ok, lets see if this correlates with the constructed FBI measures above.
 
 First up, lets look at the FBI constructed from the default survey. I am testing both Pearsons correlation and Kendal Tau correlations just in case:
 
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 TEMP <- DF1[,c("ResponseId",  "ORIE_Q1", "ORIE_Q2", "II_Q1", "II_Q2")]
@@ -781,9 +781,18 @@ for (i in 1:70) {
 
 TEMP <- merge(TEMP, DF_W1, by="ResponseId")
 
+TEMP$type <- TEMP$FBI
+TEMP$type[TEMP$FBI == 0] <- "'Balanced'"
+TEMP$type[TEMP$FBI < 0] <- "More disagreement"
+TEMP$type[TEMP$FBI > 0] <- "More ageement"
+
+me <- mean(TEMP$API, na.rm = T)
+
 ggplot(TEMP, aes(FBI, API))+
-  geom_point() +
+  geom_point(aes(colour = TEMP$type)) +
   geom_smooth(method=lm) +
+  geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+  scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
   theme_bw()
 
 cor.test(TEMP$API, TEMP$FBI, method = "pearson")
@@ -794,7 +803,28 @@ OK, interesting. Looks like the relationship is negative, which would go against
 
 Although the relationship is significant at 0.05 level only with the Pearsons correlation and not with Kendall Tau's.
 
+[UPDATE!]: Arto also suggested that to see what happens if we remove the two most extreme cases on the top left corner, where the two data points have very high API score and a high negative FBI score:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP <- subset(TEMP, TEMP$FBI > -5)
+
+ggplot(TEMP, aes(FBI, API))+
+  geom_point(aes(colour = TEMP$type)) +
+  geom_smooth(method=lm) +
+  geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+  scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+  theme_bw()
+
+cor.test(TEMP$API, TEMP$FBI, method = "pearson")
+cor.test(TEMP$API, TEMP$FBI, method = "kendall")
+```
+
+Sure enough, that has a significant impact and reduces Pearsons correlation by 56 % and Kendall Tau by 58 %. Unsurprisingly neither of them are statistically significant anymore.
+
+
 Lets see if the situation is similar in the alternative survey
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -827,10 +857,18 @@ for (i in 1:nrow(TEMP)) {
 
 TEMP <- merge(TEMP, DF_W1, by="ResponseId")
 
+TEMP$type <- TEMP$FBI
+TEMP$type[TEMP$FBI == 0 | TEMP$FBI == -1 | TEMP$FBI == 1] <- "'Balanced'"
+TEMP$type[TEMP$FBI < -1] <- "More disagreement"
+TEMP$type[TEMP$FBI > 1] <- "More ageement"
+
+me <- mean(TEMP$API, na.rm = T)
 
 ggplot(TEMP, aes(FBI, API))+
-  geom_point() +
+  geom_point(aes(colour = TEMP$type)) +
   geom_smooth(method=lm) +
+  geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+  scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
   theme_bw()
 
 cor.test(TEMP$API, TEMP$FBI, method = "pearson")
@@ -846,6 +884,7 @@ In the default survey, we are pretty clear in asking OVERALL how much people enc
 
 In the alternative version, we are loosing the middle group and rather have different degrees of "more likely to encounter agreement" and "more likely to encounter disagreement". But, I dont think this is as informative as the default version. Since we are asking the same question so many times again and again, we are bound to get more variation, but we also are loosing the nice and simple "gut feeling" answer. People might start answering this question more haphazardly to ease the cumbersomeness of the question battery, which leads to "noisy" answers.
 
+
 ## Sympathetic and antagonistic relationships
 
 One more thing before I summarize what my thoughts are for the final survey based on this pilot. I want to take a closer look at the sympathetic and antagonistic question batteries since it may be true that the battery does not differentiate between antagonism and symphathisim clearly enough.
@@ -854,11 +893,11 @@ As a reminder, here is the actual question:
 
 **Discussions with a person who SHARES the same values:**
 
-> When I do have discussions about politics or other societal issues with a person who I think does share the same basic values as I do, I often find that these discussions tend to turn into...
+> When I do have discussions about politics or other societal issues with a person who I think does share the same basic values as I do, I often find that these discussions tend to turn into…
 
 **Discussions with a person who DOES NOT SHARE the same values:**
 
-> When I do have discussions about politics or other societal issues with a person who I think did not share the same basic values as I do, I often find that these discussions tend to turn into...
+> When I do have discussions about politics or other societal issues with a person who I think did not share the same basic values as I do, I often find that these discussions tend to turn into…
 
 Since we did not have different versions of these question, I will just combine the two surveys together, getting a total sample size of **153**
 
@@ -916,9 +955,10 @@ Seems like there are some clear differences in the answers depending if the conv
 
 In particular, notable differences can be seen in these two questions:
 
--   pleasant experiences that made me appreciate the other person more
--   productive debates where I learned something new
--   unproductive quarreling that have left a sour taste in my mouth
+* pleasant experiences that made me appreciate the other person more
+* productive debates where I learned something new 
+* unproductive quarreling that have left a sour taste in my mouth
+
 
 ### Cronbach's alpha and a Factor analysis
 
@@ -945,18 +985,20 @@ p.mat <- cor_pmat(TEMP[1:8])
 ggcorrplot(corr, hc.order = F, type = "lower", lab = T, p.mat = p.mat, insig = "blank")
 ```
 
--   **V_1 [SYM]:** productive debates where I learned something new\
--   **V_2 [SYM]:** pleasant experiences that made me appreciate the other person more
--   **V_3 [SYM]:** passionate debates that I enjoyed but which ultimately did not change my opinions
--   **V_4 [SYM]:** educational experiences which have made me re-consider some of my opinions
--   **V_5 [ANT]:** unproductive quarreling that have left a sour taste in my mouth
--   **V_6 [ANT]:** delicate situations in which I may have hurt the other persons feelings
--   **V_7 [ANT]:** uncomfortable situations where I felt personally attacked due to the opinions that I have
--   **V_8 [ANT]:** thrilling verbal fights where I enjoyed arguing why some of my opinions are correct
+* **V_1 [SYM]:** productive debates where I learned something new                   
+* **V_2 [SYM]:** pleasant experiences that made me appreciate the other person more
+* **V_3 [SYM]:** passionate debates that I enjoyed but which ultimately did not change my opinions
+* **V_4 [SYM]:** educational experiences which have made me re-consider some of my opinions
+* **V_5 [ANT]:** unproductive quarreling that have left a sour taste in my mouth
+* **V_6 [ANT]:** delicate situations in which I may have hurt the other persons feelings
+* **V_7 [ANT]:** uncomfortable situations where I felt personally attacked due to the opinions that I have
+* **V_8 [ANT]:** thrilling verbal fights where I enjoyed arguing why some of my opinions are correct
+
 
 Ok, all of the items that measure sympathetic relations are positively correlated with each other, which is what we would expect. However, almost all of the antagonistic measures are also positively correlated with each other except V_7 and V_8. In addition, V_8 is also positively correlated with ALL of the sympathetic items, which goes to show that perhaps this statement does not capture antagonism clearly enough.
 
-Lets also calculate Cronbach's alpha for the two constructs to see how internally consistent the items are:
+Lets also calculate Cronbach’s alpha for the two constructs to see how internally consistent the items are:
+
 
 ```{r echo=FALSE}
 
@@ -988,14 +1030,14 @@ Yep, as we would like to see, the principal component plot would suggest that we
 
 V_8 also does not have particularly high loading in the second component (RC2) where all of the other antagonistic items are.
 
-So, it looks like it would be a good idea to re-formulate this item a bit differently, so that it captures antagonism more clearly.
+So, it looks like it would be a good idea to re-formulate this item a bit differently, so that it captures antagonisim more clearly. 
 
 ## Conclusions:
 
 To sum up, I think our next steps should be
 
-1.  Stick with the default version
-2.  re-formulate the following item:
+1. Stick with the default version
+2. re-formulate the following item:
 
 > V_8: thrilling verbal fights where I enjoyed arguing why some of my opinions are correct
 
@@ -1006,9 +1048,565 @@ Moreover, it seems that the default survey is also easier for the respondents to
 However, I will try to modify the V_8 antagonistic item, and perhaps also V_3. These options are highly correlated with each other, and they perhaps blur the line between antagonism and sympathisim too much, but I will get back to you on this once I have thought about different options.
 
 
-# To be continued
+## UPDATE!!!
 
-```{r echo=FALSE}
-print("Further code comes here")
+Ok, here are a couple of new things that I have added here based on Arto's suggestions, which were:
+
+>Arguably, the link between (informational) filter bubbles and IP could be stronger than them and AP, so I'd suggest checking if there is a relationship.
+
+- Plot FBI against the policy preference questions
+- forming two questions: a GAL-TAN index based on a subset of them, and a socioeconomic index and seeing if FBI has an effect on them
+- doing the same, except using the self-reported left-right and liberal-conservative scales
+
+### Default
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+DF_W1 <- read.csv("C:/Users/aleks/Documents/WORK/Bubble survey eOpinion Panel/FB 250 Pilot Data/Wave 1 pilot (Cleaned).csv", sep=";", comment.char="#")
+
+DF_W1 <- DF_W1[,c("ResponseId", "GAL_TAN_and_L_R_1", "GAL_TAN_and_L_R_2", "GAL_TAN_and_L_R_3", "GAL_TAN_and_L_R_4", "GAL_TAN_and_L_R_5", "GAL_TAN_and_L_R_6", "GAL_TAN_and_L_R_7", "GAL_TAN_and_L_R_8", "GAL_TAN_and_L_R_9", "GAL_TAN_and_L_R_10", "GAL_TAN_and_L_R_11", "GAL_TAN_and_L_R_12", "GAL_TAN_and_L_R_13")]
+
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP <- DF1[,c("ResponseId",  "ORIE_Q1", "ORIE_Q2", "II_Q1", "II_Q2")]
+
+for (i in 2:3) {
+  
+  TEMP[i][TEMP[i] == ""] <- NA
+  TEMP[,i] <- factor(TEMP[,i], levels = c("Extremely uncommon", "Fairly uncommon", "Neither common nor uncommon", "Fairly common", "Extremely common"))
+  TEMP[,i] <- as.numeric(TEMP[,i])
+  
+  
+}
+
+for (i in 4:5) {
+  
+  TEMP[i][TEMP[i] == ""] <- NA
+  TEMP[,i] <- factor(TEMP[,i], levels = c("Extremely uncommon", "Fairly uncommon", "Neither common nor uncommon", "Fairly common", "Extremely common"))
+  TEMP[,i] <- as.numeric(TEMP[,i])*-1
+  
+  
+}
+
+TEMP$FBI <- NA
+for (i in 1:70) {
+  
+  TEMP[i,"FBI"] <- sum(TEMP[i,c(2:5)])
+  
+}
+
+TEMP$type <- TEMP$FBI
+TEMP$type[TEMP$FBI == 0] <- "'Balanced'"
+TEMP$type[TEMP$FBI < 0] <- "More disagreement"
+TEMP$type[TEMP$FBI > 0] <- "More ageement"
+
+TEMP <- merge(TEMP, DF_W1, by="ResponseId")
+
+lables <- c("ID", var_label(DF1["ORIE_Q1"]), var_label(DF1["ORIE_Q2"]), var_label(DF1["II_Q1"]), var_label(DF1["II_Q2"]), "Filter Bubble Index", "FBI type", "Monikulttuurinen Suomi, jossa suhtaudutaan suvaitsevaisesti muista maista tuleviin ihmisiin", "Suomi, jossa kristilliset arvot ovat suuremmassa roolissa", "Suomi, jossa miehet ja naiset ovat keskenään tasa-arvoisempia", "Suomi, jossa vahvistetaan seksuaalisten vähemmistöjen oikeuksia", "Suomi, jossa on enemmän lakia ja järjestystä", "Suomi, jossa vahvistetaan perinteisen ydinperheen asemaa", "Suomi, jossa maahanmuutto on laajamittaisempaa", "Ympäristöystävällisempi Suomi, vaikka se tarkoittaisi alhaista talouskasvua tai ei kasvua ollenkaan", "Euroopan unioniin vähemmän sitoutunut Suomi", "Suomi, jossa on enemmän yksityisyrittäjyyttä ja markkinataloutta", "Suomi, jossa on alhaisempi verotus", "Suomi, jossa on pienemmät tuloerot", "Suomi, jossa on pienempi julkinen sektori")
+
+lables <- as.character(lables)
+
+#Setting variable labels
+for(i in 1:ncol(TEMP)){
+  var_label(TEMP[i]) <-  lables[i]
+}
+
+
+
+```
+
+#### Ploting FBI against policy preference questions
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+for (i in 8:ncol(TEMP)) {
+  
+  title <- str_wrap(var_label(TEMP[[i]]), 60)
+  me <- mean(TEMP[[i]], na.rm = T)
+  cor <- cor.test(TEMP[[i]], TEMP$FBI, method = "pearson")
+  foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  p <- ggplot(TEMP, aes(FBI, TEMP[[i]])) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+  
+  print(p)
+  
+}
+
+```
+
+
+#### Impact of FBI to GAL-TAN and LEFT-RIGHT
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP$GAL_TAN_and_L_R_1 <- 10 - TEMP$GAL_TAN_and_L_R_1
+TEMP$GAL_TAN_and_L_R_3 <- 10 - TEMP$GAL_TAN_and_L_R_3
+TEMP$GAL_TAN_and_L_R_4 <- 10 - TEMP$GAL_TAN_and_L_R_4
+TEMP$GAL_TAN_and_L_R_7 <- 10 - TEMP$GAL_TAN_and_L_R_7
+
+TEMP$GAL_TAN <- NA
+for (i in 1:nrow(TEMP)) {
+  
+  count <-  7 - sum(is.na(TEMP[i,8:14]))
+  
+  TEMP[i,"GAL_TAN"] <- sum(TEMP[i,8:14]) / count
+  
+}
+
+
+ggplot(TEMP, aes(GAL_TAN)) +
+  geom_histogram(aes(y = ..density..), colour = 1, fill = "white") +
+  geom_density(lwd = 1, colour = 4, fill = 4, alpha = 0.25) +
+  xlim(0, 10) +
+  theme_bw()
+
+  title <- "GAL-TAN v. FBI"
+  me <- mean(TEMP$GAL_TAN, na.rm = T)
+  cor <- cor.test(TEMP$GAL_TAN, TEMP$FBI, method = "pearson")
+  foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, GAL_TAN)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("GAL (0) - TAN (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP$GAL_TAN_and_L_R_8 <- 10 - TEMP$GAL_TAN_and_L_R_8
+TEMP$GAL_TAN_and_L_R_12 <- 10 - TEMP$GAL_TAN_and_L_R_12
+
+TEMP$LEFT_RIGHT <- NA
+for (i in 1:nrow(TEMP)) {
+  
+  count <-  6 - sum(is.na(TEMP[i,15:20]))
+  
+  TEMP[i,"LEFT_RIGHT"] <- sum(TEMP[i,15:20]) / count
+  
+}
+
+
+ggplot(TEMP, aes(LEFT_RIGHT)) +
+  geom_histogram(aes(y = ..density..), colour = 1, fill = "white") +
+  geom_density(lwd = 1, colour = 4, fill = 4, alpha = 0.25) +
+  xlim(0, 10) +
+  theme_bw()
+
+
+  title <- "LEFT-RIGHT v. FBI"
+  me <- mean(TEMP$LEFT_RIGHT, na.rm = T)
+  cor <- cor.test(TEMP$LEFT_RIGHT, TEMP$FBI, method = "pearson")
+  foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, LEFT_RIGHT)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("Left (0) - Right (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+```
+
+
+#### Impact of FBI to self-reported GAL-TAN and LEFT-RIGHT
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+DF_W1 <- read.csv("C:/Users/aleks/Documents/WORK/Bubble survey eOpinion Panel/FB 250 Pilot Data/Wave 1 pilot (Cleaned).csv", sep=";", comment.char="#")
+
+DF_W1 <- DF_W1[,c("ResponseId", "POL_LIB_TRAD_1", "POL_v_o_1")]
+
+TEMP <- merge(TEMP, DF_W1, by="ResponseId")
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(TEMP, aes(x=POL_LIB_TRAD_1))+
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.5, size = 3) +
+  xlab("Self-reporter GAL (0) - TAN (10)") +
+  ylab("Count") +
+  scale_x_continuous(limits=c(-1, 10), breaks=c(0:10)) +
+  theme_bw()
+
+
+
+title <- "Self-reported GAL-TAN v. FBI"
+me <- mean(TEMP$POL_LIB_TRAD_1, na.rm = T)
+cor <- cor.test(TEMP$POL_LIB_TRAD_1, TEMP$FBI, method = "pearson")
+foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, POL_LIB_TRAD_1)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("GAL (0) - TAN (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(TEMP, aes(x=POL_v_o_1))+
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.5, size = 3) +
+  xlab("Self-reporter LEFT (0) - RIGHT (10)") +
+  ylab("Count") +
+  scale_x_continuous(limits=c(-1, 10), breaks=c(0:10)) +
+  theme_bw()
+
+
+
+title <- "Self-reported LEFT-RIGHT v. FBI"
+me <- mean(TEMP$POL_v_o_1, na.rm = T)
+cor <- cor.test(TEMP$POL_LIB_TRAD_1, TEMP$FBI, method = "pearson")
+foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, POL_v_o_1)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("GAL (0) - TAN (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+
+```
+
+### Alternative
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+DF_W1 <- read.csv("C:/Users/aleks/Documents/WORK/Bubble survey eOpinion Panel/FB 250 Pilot Data/Wave 1 pilot (Cleaned).csv", sep=";", comment.char="#")
+
+DF_W1 <- DF_W1[,c("ResponseId", "GAL_TAN_and_L_R_1", "GAL_TAN_and_L_R_2", "GAL_TAN_and_L_R_3", "GAL_TAN_and_L_R_4", "GAL_TAN_and_L_R_5", "GAL_TAN_and_L_R_6", "GAL_TAN_and_L_R_7", "GAL_TAN_and_L_R_8", "GAL_TAN_and_L_R_9", "GAL_TAN_and_L_R_10", "GAL_TAN_and_L_R_11", "GAL_TAN_and_L_R_12", "GAL_TAN_and_L_R_13")]
+
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP <- DF2[,c("ResponseId", "ORIE_Q1_1", "ORIE_Q1_2", "ORIE_Q1_3", "ORIE_Q1_4", "ORIE_Q1_5", "ORIE_Q1_6", "ORIE_Q1_7", "ORIE_Q1_8", "ORIE_Q1_9", "ORIE_Q2_1", "ORIE_Q2_2", "ORIE_Q2_3", "ORIE_Q2_4", "ORIE_Q2_5", "ORIE_Q2_6", "II_Q1_1", "II_Q1_2", "II_Q1_3", "II_Q1_4", "II_Q1_5", "II_Q1_6", "II_Q1_7", "II_Q1_8", "II_Q1_9", "II_Q2_1", "II_Q2_2", "II_Q2_3", "II_Q2_4", "II_Q2_5", "II_Q2_6")]
+
+for (i in 2:16) {
+  
+  TEMP[i][TEMP[i] == ""] <- NA
+  TEMP[,i] <- factor(TEMP[,i], levels = c("Extremely uncommon", "Fairly uncommon", "Neither common nor uncommon", "Fairly common", "Extremely common"))
+  TEMP[,i] <- as.numeric(TEMP[,i])
+  TEMP[,i][is.na(TEMP[,i])] <- 0
+  
+}
+
+for (i in 17:31) {
+  
+  TEMP[i][TEMP[i] == ""] <- NA
+  TEMP[,i] <- factor(TEMP[,i], levels = c("Extremely uncommon", "Fairly uncommon", "Neither common nor uncommon", "Fairly common", "Extremely common"))
+  TEMP[,i] <- as.numeric(TEMP[,i])*-1
+  TEMP[,i][is.na(TEMP[,i])] <- 0
+  
+}
+
+TEMP$FBI <- NA
+for (i in 1:nrow(TEMP)) {
+  
+  TEMP[i,"FBI"] <- sum(TEMP[i, c(2:31)])
+  
+}
+
+
+TEMP <- TEMP[,c(1,32)]
+TEMP$type <- TEMP$FBI
+TEMP$type[TEMP$FBI == 0 | TEMP$FBI == -1 | TEMP$FBI == 1] <- "'Balanced'"
+TEMP$type[TEMP$FBI < -1] <- "More disagreement"
+TEMP$type[TEMP$FBI > 1] <- "More ageement"
+TEMP <- merge(TEMP, DF_W1, by="ResponseId")
+
+lables <- c("ID", "Filter Bubble Index", "FBI type", "Monikulttuurinen Suomi, jossa suhtaudutaan suvaitsevaisesti muista maista tuleviin ihmisiin", "Suomi, jossa kristilliset arvot ovat suuremmassa roolissa", "Suomi, jossa miehet ja naiset ovat keskenään tasa-arvoisempia", "Suomi, jossa vahvistetaan seksuaalisten vähemmistöjen oikeuksia", "Suomi, jossa on enemmän lakia ja järjestystä", "Suomi, jossa vahvistetaan perinteisen ydinperheen asemaa", "Suomi, jossa maahanmuutto on laajamittaisempaa", "Ympäristöystävällisempi Suomi, vaikka se tarkoittaisi alhaista talouskasvua tai ei kasvua ollenkaan", "Euroopan unioniin vähemmän sitoutunut Suomi", "Suomi, jossa on enemmän yksityisyrittäjyyttä ja markkinataloutta", "Suomi, jossa on alhaisempi verotus", "Suomi, jossa on pienemmät tuloerot", "Suomi, jossa on pienempi julkinen sektori")
+
+lables <- as.character(lables)
+
+#Setting variable labels
+for(i in 1:ncol(TEMP)){
+  var_label(TEMP[i]) <-  lables[i]
+}
+
+
+
+```
+
+#### Ploting FBI against policy preference questions
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+for (i in 8:ncol(TEMP)) {
+  
+  title <- str_wrap(var_label(TEMP[[i]]), 60)
+  me <- mean(TEMP[[i]], na.rm = T)
+  cor <- cor.test(TEMP[[i]], TEMP$FBI, method = "pearson")
+  foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  p <- ggplot(TEMP, aes(FBI, TEMP[[i]])) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+  
+  print(p)
+  
+}
+
+```
+
+
+#### Impact of FBI to GAL-TAN and LEFT-RIGHT
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP$GAL_TAN_and_L_R_1 <- 10 - TEMP$GAL_TAN_and_L_R_1
+TEMP$GAL_TAN_and_L_R_3 <- 10 - TEMP$GAL_TAN_and_L_R_3
+TEMP$GAL_TAN_and_L_R_4 <- 10 - TEMP$GAL_TAN_and_L_R_4
+TEMP$GAL_TAN_and_L_R_7 <- 10 - TEMP$GAL_TAN_and_L_R_7
+
+TEMP$GAL_TAN <- NA
+for (i in 1:nrow(TEMP)) {
+  
+  count <-  7 - sum(is.na(TEMP[i,4:10]))
+  
+  TEMP[i,"GAL_TAN"] <- sum(TEMP[i,4:10]) / count
+  
+}
+
+
+ggplot(TEMP, aes(GAL_TAN)) +
+  geom_histogram(aes(y = ..density..), colour = 1, fill = "white") +
+  geom_density(lwd = 1, colour = 4, fill = 4, alpha = 0.25) +
+  xlim(0, 10) +
+  theme_bw()
+
+  title <- "GAL-TAN v. FBI"
+  me <- mean(TEMP$GAL_TAN, na.rm = T)
+  cor <- cor.test(TEMP$GAL_TAN, TEMP$FBI, method = "pearson")
+  foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, GAL_TAN)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("GAL (0) - TAN (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+
+```
+
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+TEMP$GAL_TAN_and_L_R_8 <- 10 - TEMP$GAL_TAN_and_L_R_8
+TEMP$GAL_TAN_and_L_R_12 <- 10 - TEMP$GAL_TAN_and_L_R_12
+
+TEMP$LEFT_RIGHT <- NA
+for (i in 1:nrow(TEMP)) {
+  
+  count <-  6 - sum(is.na(TEMP[i,11:16]))
+  
+  TEMP[i,"LEFT_RIGHT"] <- sum(TEMP[i,11:16]) / count
+  
+}
+
+
+ggplot(TEMP, aes(LEFT_RIGHT)) +
+  geom_histogram(aes(y = ..density..), colour = 1, fill = "white") +
+  geom_density(lwd = 1, colour = 4, fill = 4, alpha = 0.25) +
+  xlim(0, 10) +
+  theme_bw()
+
+  title <- "LEFT-RIGHT v. FBI"
+  me <- mean(TEMP$LEFT_RIGHT, na.rm = T)
+  cor <- cor.test(TEMP$LEFT_RIGHT, TEMP$FBI, method = "pearson")
+  foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, LEFT_RIGHT)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("Left (0) - Right (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+```
+
+
+#### Impact of FBI to self-reported GAL-TAN and LEFT-RIGHT
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+DF_W1 <- read.csv("C:/Users/aleks/Documents/WORK/Bubble survey eOpinion Panel/FB 250 Pilot Data/Wave 1 pilot (Cleaned).csv", sep=";", comment.char="#")
+
+DF_W1 <- DF_W1[,c("ResponseId", "POL_LIB_TRAD_1", "POL_v_o_1")]
+
+TEMP <- merge(TEMP, DF_W1, by="ResponseId")
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(TEMP, aes(x=POL_LIB_TRAD_1))+
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.5, size = 3) +
+  xlab("Self-reporter GAL (0) - TAN (10)") +
+  ylab("Count") +
+  scale_x_continuous(limits=c(-1, 11), breaks=c(0:10)) +
+  theme_bw()
+
+
+
+title <- "Self-reported GAL-TAN v. FBI"
+me <- mean(TEMP$POL_LIB_TRAD_1, na.rm = T)
+cor <- cor.test(TEMP$POL_LIB_TRAD_1, TEMP$FBI, method = "pearson")
+foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, POL_LIB_TRAD_1)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("GAL (0) - TAN (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(TEMP, aes(x=POL_v_o_1))+
+  geom_bar() +
+  geom_text(stat='count', aes(label=..count..), vjust=-0.5, size = 3) +
+  xlab("Self-reporter LEFT (0) - RIGHT (10)") +
+  ylab("Count") +
+  scale_x_continuous(limits=c(-1, 10), breaks=c(0:10)) +
+  theme_bw()
+
+
+
+title <- "Self-reported LEFT-RIGHT v. FBI"
+me <- mean(TEMP$POL_v_o_1, na.rm = T)
+cor <- cor.test(TEMP$POL_LIB_TRAD_1, TEMP$FBI, method = "pearson")
+foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  
+  
+  
+ggplot(TEMP, aes(FBI, POL_v_o_1)) +
+    geom_point(aes(colour = TEMP$type)) +
+    geom_smooth(method=lm) +
+    geom_hline(yintercept= me, linetype="dashed", alpha = 0.6) +
+    ggtitle(title) +
+    ylab("Left (0) - Right (10)") +
+    labs(caption = foot) +
+    scale_color_manual(values=c("#1f60ab", "#47ab1f", "#ab1f1f")) +
+    theme_bw()
+```
+
+>Seeing what the followup questions on media use and encounters reveal would be good to know before we make a final decision, I think.
+
+### The followup media use question on the default survey 
+
+```{r echo=FALSE, fig.height=10, fig.width=20}
+
+
+TEMP1 <- DF1[,c("II_Q1_EXTENDED_1", "II_Q1_EXTENDED_2", "II_Q1_EXTENDED_3", "II_Q1_EXTENDED_4", "II_Q1_EXTENDED_5", "II_Q1_EXTENDED_6", "II_Q1_EXTENDED_7", "II_Q1_EXTENDED_8", "II_Q1_EXTENDED_9")]
+
+for (i in 1:ncol(TEMP1)) {
+  
+  TEMP1[i][TEMP1[i] == ""] <- NA
+  TEMP1[i][TEMP1[i] == "I do not use this media at all "] <- NA
+  TEMP1[,i] <- factor(TEMP1[,i], levels = c("Extremely uncommon", "Fairly uncommon", "Neither common nor uncommon", "Fairly common", "Extremely common"))
+  
+  names(TEMP1)[i] <- as.character(var_label(DF1[names(TEMP1[i])]))
+}
+
+TEMP1$Type <- "Disagreement"
+
+TEMP2 <- DF1[,c("ORIE_Q1_EXTENDED_1", "ORIE_Q1_EXTENDED_2", "ORIE_Q1_EXTENDED_3", "ORIE_Q1_EXTENDED_4", "ORIE_Q1_EXTENDED_5", "ORIE_Q1_EXTENDED_6", "ORIE_Q1_EXTENDED_7", "ORIE_Q1_EXTENDED_8", "ORIE_Q1_EXTENDED_9")]
+for (i in 1:ncol(TEMP2)) {
+  
+  TEMP2[i][TEMP2[i] == ""] <- NA
+  TEMP2[i][TEMP2[i] == "I do not use this media at all "] <- NA
+  TEMP2[,i] <- factor(TEMP2[,i], levels = c("Extremely uncommon", "Fairly uncommon", "Neither common nor uncommon", "Fairly common", "Extremely common"))
+  
+  names(TEMP2)[i] <- as.character(var_label(DF1[names(TEMP2[i])]))
+  
+  
+}
+
+TEMP2$Type <- "Agreement"
+
+TEMP <- rbind(TEMP1, TEMP2)
+
+for (i in 1:9) {
+  names(TEMP)[i] <- paste(names(TEMP)[i], " [No use = ", round(sum(is.na(TEMP[i]))/140*100, 2), " %]", sep = "")
+}
+
+
+
+likert_Qs <- likert(TEMP[1:9], grouping=TEMP$Type)
+Plot_default <-plot(likert_Qs, ordered = F) + ggtitle("DEFAULT SURVEY (n = 70)")
+
+
+
+grid.arrange(Plot_default, Plot_alternative + ggtitle("ALTERNATIVE SURVEY (n = 83)"), nrow = 1)
+
 ```
 
