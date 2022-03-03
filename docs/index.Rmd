@@ -1066,7 +1066,27 @@ Ok, here are a couple of new things that I have added here based on Arto's sugge
 - forming two questions: a GAL-TAN index based on a subset of them, and a socioeconomic index and seeing if FBI has an effect on them
 - doing the same, except using the self-reported left-right and liberal-conservative scales
 
-### Default
+I will do these in two parts. First, I will check how the DEFAULT survey FBI interacts with the policy questions we had in the Wave 1 pilot survey. Second, I will do the whole prosedure again for the ALTERNATIVE survey so that we can compare them and see if there are meanigfull differences.
+
+As a reminder, the policy questions were:
+
+>**Seuraavassa on lueteltu eräitä ehdotuksia koskien Suomen tulevaisuuden suuntaa. Mitä mieltä olet näistä ehdotuksista?** Käytä vastaamisessa asteikkoa nollasta kymmeneen (0-10), jossa nolla tarkoittaa "erittäin huono ehdotus", viisi "ei hyvä eikä huono ehdotus" ja kymmenen "erittäin hyvä ehdotus". 
+
+1. [GAL-TAN] Monikulttuurinen Suomi, jossa suhtaudutaan suvaitsevaisesti muista maista tuleviin ihmisiin
+2. [GAL-TAN] Suomi, jossa kristilliset arvot ovat suuremmassa roolissa
+3. [GAL-TAN] Suomi, jossa miehet ja naiset ovat keskenään tasa-arvoisempia
+4. [GAL-TAN] Suomi, jossa vahvistetaan seksuaalisten vähemmistöjen oikeuksia
+5. [GAL-TAN] Suomi, jossa on enemmän lakia ja järjestystä
+6. [GAL-TAN] Suomi, jossa vahvistetaan perinteisen ydinperheen asemaa
+7. [GAL-TAN] Suomi, jossa maahanmuutto on laajamittaisempaa
+8. [Left-Right] Ympäristöystävällisempi Suomi, vaikka se tarkoittaisi alhaista talouskasvua tai ei kasvua ollenkaan
+9. [Left-Right] Euroopan unioniin vähemmän sitoutunut Suomi
+10. [Left-Right] Suomi, jossa on enemmän yksityisyrittäjyyttä ja markkinataloutta
+11. [Left-Right] Suomi, jossa on alhaisempi verotus
+12. [Left-Right] Suomi, jossa on pienemmät tuloerot
+13. [Left-Right] Suomi, jossa on pienempi julkinen sektori
+
+### Default survey
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1129,7 +1149,20 @@ for(i in 1:ncol(TEMP)){
 
 #### Ploting FBI against policy preference questions
 
+Here are each of the 13 policy digestions plotted with the DEAFAULT survey FBI and with a Pearsons correlation test.
+
+The grey dash-line is the average response to the policy suggestion, which ranged from 0 (a bad idea) to 10 (an excellent idea).
+
+The plots are pretty consistent in that those respondents who favor GAL and LEFT policies tend to be the ones who also are more likely to encounter agreement in their day-to-day lives.
+
+In contrast, those who favor TAN and and RIGHT policies tend to be those who report encountering more disagreement than agreement, but the dispersion also seems to be bigger. Those red dots do seem to be more widely distributed on the policy axis, where as the green ones are more tihgtly clustered.
+
+Our "balanced" group seem to be pretty widely ditributed too, with many values on the policy axis.
+
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+p_list_D <- NULL
 
 for (i in 8:ncol(TEMP)) {
   
@@ -1137,6 +1170,7 @@ for (i in 8:ncol(TEMP)) {
   me <- mean(TEMP[[i]], na.rm = T)
   cor <- cor.test(TEMP[[i]], TEMP$FBI, method = "pearson")
   foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  p_list_D <- append(p_list_D, cor$p.value)
   
   p <- ggplot(TEMP, aes(FBI, TEMP[[i]])) +
     geom_point(aes(colour = TEMP$type)) +
@@ -1152,10 +1186,23 @@ for (i in 8:ncol(TEMP)) {
   
 }
 
+
 ```
 
 
 #### Impact of FBI to GAL-TAN and LEFT-RIGHT
+
+Ok, lets now put those policy question together in order to take a overall look at the trends. 
+
+First, I will check how FBI is associated with the GAL-TAN dimension. Here, I used the first seven questions, and reversed the integer values so that being close to 0 always indicates GAL and being close to 10 indicates TAN.
+
+1. [GAL-TAN, REVERSED] Monikulttuurinen Suomi, jossa suhtaudutaan suvaitsevaisesti muista maista tuleviin ihmisiin
+2. [GAL-TAN] Suomi, jossa kristilliset arvot ovat suuremmassa roolissa
+3. [GAL-TAN, REVERSED] Suomi, jossa miehet ja naiset ovat keskenään tasa-arvoisempia
+4. [GAL-TAN, REVERSED] Suomi, jossa vahvistetaan seksuaalisten vähemmistöjen oikeuksia
+5. [GAL-TAN] Suomi, jossa on enemmän lakia ja järjestystä
+6. [GAL-TAN] Suomi, jossa vahvistetaan perinteisen ydinperheen asemaa
+7. [GAL-TAN, REVERSED] Suomi, jossa maahanmuutto on laajamittaisempaa
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1199,6 +1246,24 @@ ggplot(TEMP, aes(FBI, GAL_TAN)) +
 
 ```
 
+As one might expect from the individual plots shown above, the overall trend seems to be that those who are more likely to encounter agreement are also more likely to be the most extreme in the GAL dimension. The green dots are pretty closely clustered together below the average GAL-TAN rating and we have only two observations above it.
+
+Our red dots, however, vary a lot more, although the overall trend seems to be that they are more close to the TAN dimension. However, the most extreme TAN scores are not the ones that are also extreme in the negative end of the FBI.
+
+Our "balanced" blue dots are also pretty widely distributed on the GAL-TAN axis, which would be expected.
+
+---
+
+What about the LEFT-RIGHT dimension?
+
+Here, I have used the last 6 questions where the response scales are reversed so that 0 always indicates LEFT and 10 indicates right:
+
+8. [Left-Right, REVERSED] Ympäristöystävällisempi Suomi, vaikka se tarkoittaisi alhaista talouskasvua tai ei kasvua ollenkaan
+9. [Left-Right] Euroopan unioniin vähemmän sitoutunut Suomi
+10. [Left-Right] Suomi, jossa on enemmän yksityisyrittäjyyttä ja markkinataloutta
+11. [Left-Right] Suomi, jossa on alhaisempi verotus
+12. [Left-Right, REVERSED] Suomi, jossa on pienemmät tuloerot
+13. [Left-Right] Suomi, jossa on pienempi julkinen sektori
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1240,8 +1305,15 @@ ggplot(TEMP, aes(FBI, LEFT_RIGHT)) +
     theme_bw()
 ```
 
+The overall pattern seems to be pretty similar here, although the negative correlation is stronger and the p-value a lot smaller. 
+
+Also, this time the majority of our "balanced" blues are below the average LEFT-RIGTH score, which would suggest that they are more likely to be leftists. Then again, they ALSO have the people who lean most extremely to the right, but it is difficult to know to what degree this is a small sample issue. 
 
 #### Impact of FBI to self-reported GAL-TAN and LEFT-RIGHT
+
+Lastly, lets also check it the patterns are similar when we look at the self-reported GAL-TAN and LEFT-RIGHT dimensions:
+
+>Politiikassa puhutaan joskus arvoliberaaliudesta ja arvokonservatiivisuudesta. Käytämme asteikkoa, jossa nolla tarkoittaa eniten arvoliberaali ja kymmenen eniten arvokonservatiivinen. **Mihin kohtaa sijoittaisit itsesi tällä asteikolla?**
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1285,6 +1357,12 @@ ggplot(TEMP, aes(FBI, POL_LIB_TRAD_1)) +
 
 ```
 
+Looks pretty similar, but the correlation is a lot smaller and not significant.
+
+What about LEFT-RIGHT:
+
+>Politiikassa puhutaan joskus vasemmistosta ja oikeistosta. Käytämme asteikkoa, jossa nolla tarkoittaa eniten vasemmalla ja kymmenen eniten oikealla. **Mihin kohtaa sijoittaisit itsesi tällä asteikolla?**
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(TEMP, aes(x=POL_v_o_1))+
@@ -1316,7 +1394,15 @@ ggplot(TEMP, aes(FBI, POL_v_o_1)) +
 
 ```
 
+Ok, the correlation is yet again smaller and the p-value is a lot bigger too. The distribution starts to be more random in this case.
+
 ### Alternative
+
+Next, I will do the whole thing again, but this time I will use FBI constructed from the alternative survey.
+
+Since it now becomes more ambiguous to determine who our "balanced" people are, I will just use a simple cutoff point to determine them here:
+
+* "Balanced" are those whose FBI ranges from [-1, 1]
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1382,12 +1468,14 @@ for(i in 1:ncol(TEMP)){
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
+p_list_A <- NULL
 for (i in 8:ncol(TEMP)) {
   
   title <- str_wrap(var_label(TEMP[[i]]), 60)
   me <- mean(TEMP[[i]], na.rm = T)
   cor <- cor.test(TEMP[[i]], TEMP$FBI, method = "pearson")
   foot <- paste("Pearsons correlation = ", round(cor$estimate, 2), "; p-value = ", round(cor$p.value, 4), sep = "")
+  p_list_A <- append(p_list_A, cor$p.value)
   
   p <- ggplot(TEMP, aes(FBI, TEMP[[i]])) +
     geom_point(aes(colour = TEMP$type)) +
@@ -1405,8 +1493,25 @@ for (i in 8:ncol(TEMP)) {
 
 ```
 
+The overall pattern seems to be similar than what we had in the DEFAULT survey: TAN and LEFT are more more likely to be our green dots, and the green dots are also more closely clustered together.
+
+However, it also seems that there are more elements of randomness in the alternative survey, or at least that the relationship between FBI and the policy questions are not as linear here:
+
+- Average p-value in the DEFAULT survey: **0.187**, SD: **0.177**
+  * 2 with p < 0.05
+- Average p-value in the DEFAULT survey: **0.329**, SD: **0.391**
+  * 3 with p < 0.05
+
+But there are also some correlations that are much clearer in the alternative srurvey. In particular these two:
+
+- [GAL-TAN] Suomi, jossa maahanmuutto on laajamittaisempaa
+- [Left-Right] Euroopan unioniin vähemmän sitoutunut Suomi
+
+Those two had the strongest correlations thus far.
 
 #### Impact of FBI to GAL-TAN and LEFT-RIGHT
+
+How do things look when we combine GAL-TAN and LEFT-RIGHT -dimensions together:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1450,7 +1555,16 @@ ggplot(TEMP, aes(FBI, GAL_TAN)) +
 
 ```
 
+Things seem pretty similar to one other:
 
+- The overall correlation size and direction is the same
+- The distribution of the red, green and blue dots also mimic each other
+
+Or at least I don't notice any significant differences.
+
+---
+
+Next up, the LEFT-RIGHT dimension:
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -1492,8 +1606,11 @@ ggplot(TEMP, aes(FBI, LEFT_RIGHT)) +
     theme_bw()
 ```
 
+The pattern is again similar, but this time the DEFAULT survey has the stronger correlation.
 
 #### Impact of FBI to self-reported GAL-TAN and LEFT-RIGHT
+
+Lets just quickly see the self-reported versions:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -1567,9 +1684,18 @@ ggplot(TEMP, aes(FBI, POL_v_o_1)) +
     theme_bw()
 ```
 
->Seeing what the followup questions on media use and encounters reveal would be good to know before we make a final decision, I think.
+Hmm, something unusual is going on, since for the first time we see a positive correlation on the self-reported LEFT-RIGHT dimension, which would suggest that those who are more likely to encounter agreement are actually those who also lean to the right. 
+
+But the regression line is pretty close to the overall mean and the confidence interavall also overlaps it, so this might be just becose of our small sample size and with a bigger sample we would see a negative correlation.
+
 
 ### The followup media use question on the default survey 
+
+The last thing I wanted to have in this update is to respond to this suggestion from Arto:
+
+>Seeing what the followup questions on media use and encounters reveal would be good to know before we make a final decision, I think.
+
+So, here are the followup media questions. I have also put the corresponding questions form the Alternative survey next to it, so you don't have to scroll up to find it.
 
 ```{r echo=FALSE, fig.height=10, fig.width=20}
 
@@ -1617,4 +1743,15 @@ Plot_default <-plot(likert_Qs, ordered = F) + ggtitle("DEFAULT SURVEY (n = 70)")
 grid.arrange(Plot_default, Plot_alternative + ggtitle("ALTERNATIVE SURVEY (n = 83)"), nrow = 1)
 
 ```
+
+Comparing the two, it looks like the DEFAULT survey results in pretty much to the same results as our ALTERNATIVE survey.
+
+The only big difference is in YOUTUBE, which curiously is more "Balanced" in the DEFAULT survey. In the ALTERNATIVE version, you can see that it is more common for people to encounter disagreement on Youtube than agreement, but this difference is not as clear in the DEFAULT survey.
+
+But still, I think we will get pretty much the same results here no matter which survey version we will use.
+
+## Second conclusions:
+
+I think that all of these updates further confirm that the DEFAULT survey is the way to go. There are no differences between the overall patterns that we can observe between the two surveys, but it seems that the default survey is easier for people to answer and it is also easier to work with the data on the default survey. 
+
 
